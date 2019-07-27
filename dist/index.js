@@ -49,7 +49,6 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
     await build_utils_1.download(files, workPath, meta);
     const mountpoint = path_1.default.dirname(entrypoint);
     const entrypointDir = path_1.default.join(workPath, mountpoint);
-    console.log("Mountpoint is: " + JSON.stringify(mountpoint));
     const distPath = path_1.default.join(workPath, mountpoint, (config && config.distDir) || "build");
     const entrypointName = path_1.default.basename(entrypoint);
     if (entrypointName === "package.json") {
@@ -72,9 +71,11 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
         if (!found) {
             throw new Error(`Missing required "${buildScript}" script in "${entrypoint}"`);
         }
+        console.log("Mountpoint is: " + JSON.stringify(mountpoint));
         console.log("Routes are: " + JSON.stringify(routes));
         validateDistDir(distPath, meta.isDev, config);
         const output = await build_utils_1.glob("**", distPath, mountpoint);
+        console.log("Finished!");
         return { routes, output };
     }
     throw new Error(`Build "src" is "${entrypoint}" but expected "package.json"`);

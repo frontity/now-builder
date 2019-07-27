@@ -97,8 +97,6 @@ export async function build({
   const mountpoint = path.dirname(entrypoint);
   const entrypointDir = path.join(workPath, mountpoint);
 
-  console.log("Mountpoint is: " + JSON.stringify(mountpoint));
-
   const distPath = path.join(
     workPath,
     mountpoint,
@@ -141,10 +139,13 @@ export async function build({
       );
     }
 
+    console.log("Mountpoint is: " + JSON.stringify(mountpoint));
     console.log("Routes are: " + JSON.stringify(routes));
 
     validateDistDir(distPath, meta.isDev, config);
     const output: Files = await glob("**", distPath, mountpoint);
+
+    console.log("Finished!");
 
     return { routes, output };
   }
