@@ -60,6 +60,11 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
                 src: `/static/(.*)`,
                 headers: { "cache-control": "s-maxage=31536000, immutable" },
                 dest: `/static/$1`
+            },
+            {
+                src: "/(.*)",
+                headers: { "cache-control": "s-maxage=1,stale-while-revalidate" },
+                dest: "/main.js"
             }
         ];
         const nodeVersion = await build_utils_1.getNodeVersion(entrypointDir, minNodeRange);

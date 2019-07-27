@@ -116,6 +116,11 @@ export async function build({
         src: `/static/(.*)`,
         headers: { "cache-control": "s-maxage=31536000, immutable" },
         dest: `/static/$1`
+      },
+      {
+        src: "/(.*)",
+        headers: { "cache-control": "s-maxage=1,stale-while-revalidate" },
+        dest: "/main.js"
       }
     ];
 
