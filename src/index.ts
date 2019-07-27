@@ -142,7 +142,7 @@ export async function build({
     }
 
     validateDistDir(distPath, meta.isDev, config);
-    const output: Files = await glob("/static/**/*", distPath, mountpoint);
+    const output: Files = await glob("**", distPath, mountpoint);
 
     return { routes, output };
   }

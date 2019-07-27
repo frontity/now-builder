@@ -73,7 +73,7 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
             throw new Error(`Missing required "${buildScript}" script in "${entrypoint}"`);
         }
         validateDistDir(distPath, meta.isDev, config);
-        const output = await build_utils_1.glob("/static/**/*", distPath, mountpoint);
+        const output = await build_utils_1.glob("**", distPath, mountpoint);
         return { routes, output };
     }
     throw new Error(`Build "src" is "${entrypoint}" but expected "package.json"`);
