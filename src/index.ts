@@ -5,7 +5,6 @@ import {
   download,
   runNpmInstall,
   runPackageJsonScript,
-  runShellScript,
   getNodeVersion,
   getSpawnOptions,
   Files,
@@ -148,21 +147,5 @@ export async function build({
     return { routes, output };
   }
 
-  if (!config.zeroConfig && entrypointName.endsWith(".sh")) {
-    console.log(`Running build script "${entrypoint}"`);
-    const nodeVersion = await getNodeVersion(entrypointDir);
-    const spawnOpts = getSpawnOptions(meta, nodeVersion);
-    await runShellScript(path.join(workPath, entrypoint), [], spawnOpts);
-    validateDistDir(distPath, meta.isDev, config);
-
-    return glob("**", distPath, mountpoint);
-  }
-
-  let message = `Build "src" is "${entrypoint}" but expected "package.json"`;
-
-  if (!config.zeroConfig) {
-    message += ' or "build.sh"';
-  }
-
-  throw new Error(message);
+  throw new Error(`Build "src" is "${entrypoint}" but expected "package.json"`);
 }

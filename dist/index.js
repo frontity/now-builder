@@ -76,18 +76,6 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
         const output = await build_utils_1.glob("/static/**/*", distPath, mountpoint);
         return { routes, output };
     }
-    if (!config.zeroConfig && entrypointName.endsWith(".sh")) {
-        console.log(`Running build script "${entrypoint}"`);
-        const nodeVersion = await build_utils_1.getNodeVersion(entrypointDir);
-        const spawnOpts = build_utils_1.getSpawnOptions(meta, nodeVersion);
-        await build_utils_1.runShellScript(path_1.default.join(workPath, entrypoint), [], spawnOpts);
-        validateDistDir(distPath, meta.isDev, config);
-        return build_utils_1.glob("**", distPath, mountpoint);
-    }
-    let message = `Build "src" is "${entrypoint}" but expected "package.json"`;
-    if (!config.zeroConfig) {
-        message += ' or "build.sh"';
-    }
-    throw new Error(message);
+    throw new Error(`Build "src" is "${entrypoint}" but expected "package.json"`);
 }
 exports.build = build;
