@@ -64,7 +64,7 @@ async function build({ files, entrypoint, workPath, config, meta = {}, }) {
     await build_utils_1.download(files, workPath, meta);
     const mountpoint = path_1.default.dirname(entrypoint);
     const entrypointDir = path_1.default.join(workPath, mountpoint);
-    let distPath = path_1.default.join(workPath, path_1.default.dirname(entrypoint), (config && config.distDir) || 'build/static');
+    let distPath = path_1.default.join(workPath, path_1.default.dirname(entrypoint), (config && config.distDir) || 'build');
     const entrypointName = path_1.default.basename(entrypoint);
     if (entrypointName === 'package.json') {
         const pkgPath = path_1.default.join(workPath, entrypoint);
