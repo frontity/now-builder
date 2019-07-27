@@ -6,6 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const fs_1 = require("fs");
 const build_utils_1 = require("@now/build-utils");
+const launcher_1 = require("./launcher");
+const LAUNCHER_FILENAME = "___now_launcher";
+const BRIDGE_FILENAME = "___now_bridge";
+const HELPERS_FILENAME = "___now_helpers";
+const SOURCEMAP_SUPPORT_FILENAME = "__sourcemap_support";
 function validateDistDir(distDir, isDev, config) {
     const distDirName = path_1.default.basename(distDir);
     const exists = () => fs_1.existsSync(distDir);
@@ -82,21 +87,29 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
         const statics = await build_utils_1.glob("**", distPath, mountpoint);
         console.log("Output files are: " + JSON.stringify(statics));
         console.log("Server.js is: " + JSON.stringify(statics["server.js"]));
+        const launcherFiles = {
+            [`${LAUNCHER_FILENAME}.js`]: new build_utils_1.FileBlob({
+                data: launcher_1.makeLauncher({
+                    entrypointPath: `./${entrypoint}`,
+                    bridgePath: `./${BRIDGE_FILENAME}`,
+                    helpersPath: `./${HELPERS_FILENAME}`,
+                    sourcemapSupportPath: `./${SOURCEMAP_SUPPORT_FILENAME}`
+                })
+            }),
+            [`${BRIDGE_FILENAME}.js`]: new build_utils_1.FileFsRef({
+                fsPath: path_1.default.join(__dirname, "bridge.js")
+            })
+        };
         const lambda = await build_utils_1.createLambda({
             runtime: "nodejs8.10",
             handler: "___now_launcher.launcher",
             files: {
-                "index.js": new build_utils_1.FileFsRef(statics["server.js"])
+                ...launcherFiles,
+                "index.js": new build_utils_1.FileFsRef({
+                    fsPath: statics["server.js"].fsPath
+                })
             }
         });
-        // const lambda = await createLambda({
-        //   files: {
-        //     ...preparedFiles,
-        //     ...(awsLambdaHandler ? {} : launcherFiles)
-        //   },
-        //   handler: awsLambdaHandler || `${LAUNCHER_FILENAME}.launcher`,
-        //   runtime: "nodejs8.10"
-        // });
         const output = {
             ...statics,
             "main.js": lambda
