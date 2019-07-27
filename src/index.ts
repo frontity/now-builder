@@ -145,6 +145,8 @@ export async function build({
     validateDistDir(distPath, meta.isDev, config);
     const output: Files = await glob("**", distPath, mountpoint);
 
+    console.log("Output files are: " + JSON.stringify(output));
+
     console.log("Finished!");
 
     return { routes, output };

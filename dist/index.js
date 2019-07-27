@@ -75,6 +75,7 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
         console.log("Routes are: " + JSON.stringify(routes));
         validateDistDir(distPath, meta.isDev, config);
         const output = await build_utils_1.glob("**", distPath, mountpoint);
+        console.log("Output files are: " + JSON.stringify(output));
         console.log("Finished!");
         return { routes, output };
     }
