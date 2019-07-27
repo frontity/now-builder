@@ -98,9 +98,11 @@ export async function build({
   const mountpoint = path.dirname(entrypoint);
   const entrypointDir = path.join(workPath, mountpoint);
 
-  let distPath = path.join(
+  console.log(mountpoint);
+
+  const distPath = path.join(
     workPath,
-    path.dirname(entrypoint),
+    mountpoint,
     (config && (config.distDir as string)) || "build"
   );
 
@@ -110,15 +112,14 @@ export async function build({
     const pkgPath = path.join(workPath, entrypoint);
     const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
 
-    let output: Files = {};
-    let minNodeRange: string | undefined = undefined;
+    const minNodeRange: string | undefined = undefined;
 
     const routes: Route[] = [
       {
-        src: '/static/(.*)',
-        headers: { 'cache-control': 's-maxage=31536000, immutable' },
-        dest: '/static/$1',
-      },
+        src: `/${mountpoint}static/(.*)`,
+        headers: { "cache-control": "s-maxage=31536000, immutable" },
+        dest: `/${mountpoint}static/$1`
+      }
     ];
 
     const nodeVersion = await getNodeVersion(entrypointDir, minNodeRange);
@@ -142,10 +143,9 @@ export async function build({
     }
 
     validateDistDir(distPath, meta.isDev, config);
-    output = await glob("**", distPath, mountpoint);
+    const output: Files = await glob("/static/**/*", distPath, mountpoint);
 
-    const watch = [path.join(mountpoint.replace(/^\.\/?/, ""), "**/*")];
-    return { routes, watch, output };
+    return { routes, output };
   }
 
   if (!config.zeroConfig && entrypointName.endsWith(".sh")) {

@@ -49,19 +49,19 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
     await build_utils_1.download(files, workPath, meta);
     const mountpoint = path_1.default.dirname(entrypoint);
     const entrypointDir = path_1.default.join(workPath, mountpoint);
-    let distPath = path_1.default.join(workPath, path_1.default.dirname(entrypoint), (config && config.distDir) || "build");
+    console.log(mountpoint);
+    const distPath = path_1.default.join(workPath, mountpoint, (config && config.distDir) || "build");
     const entrypointName = path_1.default.basename(entrypoint);
     if (entrypointName === "package.json") {
         const pkgPath = path_1.default.join(workPath, entrypoint);
         const pkg = JSON.parse(fs_1.readFileSync(pkgPath, "utf8"));
-        let output = {};
-        let minNodeRange = undefined;
+        const minNodeRange = undefined;
         const routes = [
             {
-                src: '/static/(.*)',
-                headers: { 'cache-control': 's-maxage=31536000, immutable' },
-                dest: '/static/$1',
-            },
+                src: `/${mountpoint}static/(.*)`,
+                headers: { "cache-control": "s-maxage=31536000, immutable" },
+                dest: `/${mountpoint}static/$1`
+            }
         ];
         const nodeVersion = await build_utils_1.getNodeVersion(entrypointDir, minNodeRange);
         const spawnOpts = build_utils_1.getSpawnOptions(meta, nodeVersion);
@@ -73,9 +73,8 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
             throw new Error(`Missing required "${buildScript}" script in "${entrypoint}"`);
         }
         validateDistDir(distPath, meta.isDev, config);
-        output = await build_utils_1.glob("**", distPath, mountpoint);
-        const watch = [path_1.default.join(mountpoint.replace(/^\.\/?/, ""), "**/*")];
-        return { routes, watch, output };
+        const output = await build_utils_1.glob("/static/**/*", distPath, mountpoint);
+        return { routes, output };
     }
     if (!config.zeroConfig && entrypointName.endsWith(".sh")) {
         console.log(`Running build script "${entrypoint}"`);
