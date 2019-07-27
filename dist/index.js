@@ -56,7 +56,13 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
         const pkg = JSON.parse(fs_1.readFileSync(pkgPath, "utf8"));
         let output = {};
         let minNodeRange = undefined;
-        const routes = [];
+        const routes = [
+            {
+                src: '/static/(.*)',
+                headers: { 'cache-control': 's-maxage=31536000, immutable' },
+                dest: '/static/$1',
+            },
+        ];
         const nodeVersion = await build_utils_1.getNodeVersion(entrypointDir, minNodeRange);
         const spawnOpts = build_utils_1.getSpawnOptions(meta, nodeVersion);
         await build_utils_1.runNpmInstall(entrypointDir, ["--prefer-offline"], spawnOpts);

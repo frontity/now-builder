@@ -113,7 +113,13 @@ export async function build({
     let output: Files = {};
     let minNodeRange: string | undefined = undefined;
 
-    const routes: Route[] = [];
+    const routes: Route[] = [
+      {
+        src: '/static/(.*)',
+        headers: { 'cache-control': 's-maxage=31536000, immutable' },
+        dest: '/static/$1',
+      },
+    ];
 
     const nodeVersion = await getNodeVersion(entrypointDir, minNodeRange);
     const spawnOpts = getSpawnOptions(meta, nodeVersion);
