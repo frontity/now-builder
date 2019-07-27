@@ -49,7 +49,6 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
     await build_utils_1.download(files, workPath, meta);
     const mountpoint = path_1.default.dirname(entrypoint);
     const entrypointDir = path_1.default.join(workPath, mountpoint);
-    console.log(mountpoint);
     const distPath = path_1.default.join(workPath, mountpoint, (config && config.distDir) || "build");
     const entrypointName = path_1.default.basename(entrypoint);
     if (entrypointName === "package.json") {
@@ -58,9 +57,9 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
         const minNodeRange = undefined;
         const routes = [
             {
-                src: `/${mountpoint}static/(.*)`,
+                src: `/static/(.*)`,
                 headers: { "cache-control": "s-maxage=31536000, immutable" },
-                dest: `/${mountpoint}static/$1`
+                dest: `/static/$1`
             }
         ];
         const nodeVersion = await build_utils_1.getNodeVersion(entrypointDir, minNodeRange);
@@ -72,6 +71,7 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
         if (!found) {
             throw new Error(`Missing required "${buildScript}" script in "${entrypoint}"`);
         }
+        console.log("Routes are: ", JSON.stringify(routes));
         validateDistDir(distPath, meta.isDev, config);
         const output = await build_utils_1.glob("**", distPath, mountpoint);
         return { routes, output };

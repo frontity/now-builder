@@ -97,8 +97,6 @@ export async function build({
   const mountpoint = path.dirname(entrypoint);
   const entrypointDir = path.join(workPath, mountpoint);
 
-  console.log(mountpoint);
-
   const distPath = path.join(
     workPath,
     mountpoint,
@@ -115,9 +113,9 @@ export async function build({
 
     const routes: Route[] = [
       {
-        src: `/${mountpoint}static/(.*)`,
+        src: `/static/(.*)`,
         headers: { "cache-control": "s-maxage=31536000, immutable" },
-        dest: `/${mountpoint}static/$1`
+        dest: `/static/$1`
       }
     ];
 
@@ -140,6 +138,8 @@ export async function build({
         `Missing required "${buildScript}" script in "${entrypoint}"`
       );
     }
+
+    console.log("Routes are: ", JSON.stringify(routes));
 
     validateDistDir(distPath, meta.isDev, config);
     const output: Files = await glob("**", distPath, mountpoint);
