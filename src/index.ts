@@ -10,7 +10,8 @@ import {
   createLambda,
   Route,
   BuildOptions,
-  Config
+  Config,
+  FileFsRef
 } from "@now/build-utils";
 
 interface PackageJson {
@@ -151,12 +152,13 @@ export async function build({
     const statics = await glob("**", distPath, mountpoint);
 
     console.log("Output files are: " + JSON.stringify(statics));
+    console.log("Server.js is: " + JSON.stringify(statics["server.js"]));
 
     const lambda = await createLambda({
       runtime: "nodejs8.10",
-      handler: "index.default",
+      handler: "___now_launcher.launcher",
       files: {
-        "index.js": statics["server.js"]
+        "index.js": new FileFsRef(statics["server.js"])
       }
     });
 

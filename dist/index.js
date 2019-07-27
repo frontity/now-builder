@@ -81,11 +81,12 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
         validateDistDir(distPath, meta.isDev, config);
         const statics = await build_utils_1.glob("**", distPath, mountpoint);
         console.log("Output files are: " + JSON.stringify(statics));
+        console.log("Server.js is: " + JSON.stringify(statics["server.js"]));
         const lambda = await build_utils_1.createLambda({
             runtime: "nodejs8.10",
-            handler: "index.default",
+            handler: "___now_launcher.launcher",
             files: {
-                "index.js": statics["server.js"]
+                "index.js": new build_utils_1.FileFsRef(statics["server.js"])
             }
         });
         // const lambda = await createLambda({
