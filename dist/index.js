@@ -74,8 +74,27 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
         console.log("Mountpoint is: " + JSON.stringify(mountpoint));
         console.log("Routes are: " + JSON.stringify(routes));
         validateDistDir(distPath, meta.isDev, config);
-        const output = await build_utils_1.glob("**", distPath, mountpoint);
-        console.log("Output files are: " + JSON.stringify(output));
+        const statics = await build_utils_1.glob("**", distPath, mountpoint);
+        console.log("Output files are: " + JSON.stringify(statics));
+        const lambda = await build_utils_1.createLambda({
+            runtime: "nodejs8.10",
+            handler: "index.default",
+            files: {
+                "index.js": statics["server.js"]
+            }
+        });
+        // const lambda = await createLambda({
+        //   files: {
+        //     ...preparedFiles,
+        //     ...(awsLambdaHandler ? {} : launcherFiles)
+        //   },
+        //   handler: awsLambdaHandler || `${LAUNCHER_FILENAME}.launcher`,
+        //   runtime: "nodejs8.10"
+        // });
+        const output = {
+            ...statics,
+            "main.js": lambda
+        };
         console.log("Finished!");
         return { routes, output };
     }

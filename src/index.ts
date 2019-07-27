@@ -7,7 +7,7 @@ import {
   runPackageJsonScript,
   getNodeVersion,
   getSpawnOptions,
-  Files,
+  createLambda,
   Route,
   BuildOptions,
   Config
@@ -143,9 +143,31 @@ export async function build({
     console.log("Routes are: " + JSON.stringify(routes));
 
     validateDistDir(distPath, meta.isDev, config);
-    const output: Files = await glob("**", distPath, mountpoint);
+    const statics = await glob("**", distPath, mountpoint);
 
-    console.log("Output files are: " + JSON.stringify(output));
+    console.log("Output files are: " + JSON.stringify(statics));
+
+    const lambda = await createLambda({
+      runtime: "nodejs8.10",
+      handler: "index.default",
+      files: {
+        "index.js": statics["server.js"]
+      }
+    });
+
+    // const lambda = await createLambda({
+    //   files: {
+    //     ...preparedFiles,
+    //     ...(awsLambdaHandler ? {} : launcherFiles)
+    //   },
+    //   handler: awsLambdaHandler || `${LAUNCHER_FILENAME}.launcher`,
+    //   runtime: "nodejs8.10"
+    // });
+
+    const output = {
+      ...statics,
+      "main.js": lambda
+    };
 
     console.log("Finished!");
 
