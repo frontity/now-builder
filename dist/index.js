@@ -92,7 +92,7 @@ async function build({ files, entrypoint, workPath, config, meta = {} }) {
         };
         const lambda = await build_utils_1.createLambda({
             runtime: "nodejs8.10",
-            handler: "___now_launcher.launcher",
+            handler: "now__launcher.launcher",
             files: {
                 ...launcherFiles,
                 "index.js": new build_utils_1.FileFsRef({
