@@ -11,11 +11,8 @@ import {
   Route,
   BuildOptions,
   Config,
-  FileFsRef,
-  Files,
-  FileBlob
+  FileFsRef
 } from "@now/build-utils";
-import { makeLauncher } from "./launcher";
 
 interface PackageJson {
   scripts?: {
@@ -28,11 +25,6 @@ interface PackageJson {
     [key: string]: string;
   };
 }
-
-const LAUNCHER_FILENAME = "___now_launcher";
-const BRIDGE_FILENAME = "___now_bridge";
-const HELPERS_FILENAME = "___now_helpers";
-const SOURCEMAP_SUPPORT_FILENAME = "__sourcemap_support";
 
 function validateDistDir(
   distDir: string,
@@ -162,17 +154,12 @@ export async function build({
     console.log("Output files are: " + JSON.stringify(statics));
     console.log("Server.js is: " + JSON.stringify(statics["server.js"]));
 
-    const launcherFiles: Files = {
-      [`${LAUNCHER_FILENAME}.js`]: new FileBlob({
-        data: makeLauncher({
-          entrypointPath: `./${entrypoint}`,
-          bridgePath: `./${BRIDGE_FILENAME}`,
-          helpersPath: `./${HELPERS_FILENAME}`,
-          sourcemapSupportPath: `./${SOURCEMAP_SUPPORT_FILENAME}`
-        })
+    const launcherFiles = {
+      "now__bridge.js": new FileFsRef({
+        fsPath: require("@now/node-bridge")
       }),
-      [`${BRIDGE_FILENAME}.js`]: new FileFsRef({
-        fsPath: path.join(__dirname, "bridge.js")
+      "now__launcher.js": new FileFsRef({
+        fsPath: path.join(__dirname, "launcher.js")
       })
     };
 
