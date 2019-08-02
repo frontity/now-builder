@@ -11,7 +11,8 @@ import {
   Route,
   BuildOptions,
   Config,
-  FileFsRef
+  FileFsRef,
+  Lambda
 } from "@now/build-utils";
 
 interface PackageJson {
@@ -26,15 +27,19 @@ interface PackageJson {
   };
 }
 
+interface Output {
+  [name: string]: FileFsRef | Lambda;
+}
+
 function validateDistDir(
   distDir: string,
   isDev: boolean | undefined,
   config: Config
-) {
+): void {
   const distDirName = path.basename(distDir);
-  const exists = () => existsSync(distDir);
-  const isDirectory = () => statSync(distDir).isDirectory();
-  const isEmpty = () => readdirSync(distDir).length === 0;
+  const exists = (): boolean => existsSync(distDir);
+  const isDirectory = (): boolean => statSync(distDir).isDirectory();
+  const isEmpty = (): boolean => readdirSync(distDir).length === 0;
 
   const hash = isDev
     ? "#local-development"
@@ -62,7 +67,11 @@ function validateDistDir(
   }
 }
 
-function getCommand(pkg: PackageJson, cmd: string, { zeroConfig }: Config) {
+function getCommand(
+  pkg: PackageJson,
+  cmd: string,
+  { zeroConfig }: Config
+): string {
   // The `dev` script can be `now dev`
   const nowCmd = `now-${cmd}`;
 
@@ -91,7 +100,7 @@ export async function build({
   workPath,
   config,
   meta = {}
-}: BuildOptions) {
+}: BuildOptions): Promise<{ routes: object; output: Output }> {
   console.log("Downloading user files...");
   await download(files, workPath, meta);
 

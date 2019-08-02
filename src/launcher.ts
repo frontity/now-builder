@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV =
     process.env.NOW_REGION === "dev1" ? "development" : "production";
