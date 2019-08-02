@@ -1,8 +1,19 @@
 {
   "name": "@frontity/now",
   "version": "0.1.0",
-  "license": "MIT",
+  "description": "A Frontity builder for the Now hosting (Zeit)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontity/now-builder.git"
+  },
   "main": "./dist/index.js",
+  "keywords": [],
+  "author": "Luis Herranz",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/frontity/now-builder/issues"
+  },
+  "homepage": "https://github.com/frontity/now-builder#readme",
   "files": [
     "dist"
   ],
