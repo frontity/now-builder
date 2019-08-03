@@ -121,7 +121,7 @@ export async function build({
       {
         src: "/(.*)",
         headers: { "cache-control": "s-maxage=1,stale-while-revalidate" },
-        dest: "/main.js"
+        dest: "/server.js"
       }
     ];
 
@@ -145,15 +145,12 @@ export async function build({
       );
     }
 
-    console.log("Mountpoint is: " + JSON.stringify(mountpoint));
-    console.log("Routes are: " + JSON.stringify(routes));
-
     validateDistDir(distPath, meta.isDev, config);
-    const statics = await glob("**", distPath, mountpoint);
+    const statics = await glob("static/**", distPath, mountpoint);
+    const server = await glob("server.js", distPath, mountpoint);
     const favicon = await glob("favicon.ico", workPath, mountpoint);
 
-    console.log("Output files are: " + JSON.stringify(statics));
-    console.log("Server.js is: " + JSON.stringify(statics["server.js"]));
+    console.log("Static files are: " + JSON.stringify(statics));
 
     const launcherFiles = {
       "now__bridge.js": new FileFsRef({
@@ -170,7 +167,7 @@ export async function build({
       files: {
         ...launcherFiles,
         "index.js": new FileFsRef({
-          fsPath: statics["server.js"].fsPath
+          fsPath: server["server.js"].fsPath
         })
       }
     });
@@ -178,10 +175,10 @@ export async function build({
     const output = {
       ...statics,
       ...favicon,
-      "main.js": lambda
+      "server.js": lambda
     };
 
-    console.log("Finished!");
+    console.log("Finished.");
 
     return { routes, output };
   }
