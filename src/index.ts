@@ -67,18 +67,8 @@ function validateDistDir(
   }
 }
 
-function getCommand(
-  pkg: PackageJson,
-  cmd: string,
-  { zeroConfig }: Config
-): string {
-  // The `dev` script can be `now dev`
+function getCommand(pkg: PackageJson, cmd: string): string {
   const nowCmd = `now-${cmd}`;
-
-  if (!zeroConfig && cmd === "dev") {
-    return nowCmd;
-  }
-
   const scripts = (pkg && pkg.scripts) || {};
 
   if (scripts[nowCmd]) {
@@ -89,7 +79,7 @@ function getCommand(
     return cmd;
   }
 
-  return zeroConfig ? cmd : nowCmd;
+  return `npx frontity ${cmd}`;
 }
 
 export const version = 2;
@@ -139,7 +129,7 @@ export async function build({
 
     await runNpmInstall(entrypointDir, ["--prefer-offline"], spawnOpts);
 
-    const buildScript = getCommand(pkg, "build", config as Config);
+    const buildScript = getCommand(pkg, "build");
     console.log(`Running "${buildScript}" script in "${entrypoint}"`);
 
     const found = await runPackageJsonScript(
