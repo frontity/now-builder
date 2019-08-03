@@ -9,6 +9,7 @@ Use this builder to deploy a [Frontity](https://frontity.org) project in the Zei
 ```json
 {
   "alias": "www.your-site.com",
+  "version": 2,
   "builds": [
     {
       "src": "package.json",
