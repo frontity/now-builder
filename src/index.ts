@@ -117,6 +117,7 @@ export async function build({
         headers: { "cache-control": "s-maxage=31536000, immutable" },
         dest: `/static/$1`
       },
+      { src: "/favicon.ico", dest: "/favicon.ico" },
       {
         src: "/(.*)",
         headers: { "cache-control": "s-maxage=1,stale-while-revalidate" },
@@ -149,6 +150,7 @@ export async function build({
 
     validateDistDir(distPath, meta.isDev, config);
     const statics = await glob("**", distPath, mountpoint);
+    const favicon = await glob("favicon.ico", workPath, mountpoint);
 
     console.log("Output files are: " + JSON.stringify(statics));
     console.log("Server.js is: " + JSON.stringify(statics["server.js"]));
@@ -175,6 +177,7 @@ export async function build({
 
     const output = {
       ...statics,
+      ...favicon,
       "main.js": lambda
     };
 
