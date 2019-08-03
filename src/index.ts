@@ -150,8 +150,6 @@ export async function build({
     const server = await glob("server.js", distPath, mountpoint);
     const favicon = await glob("favicon.ico", workPath, mountpoint);
 
-    console.log("Static files are: " + JSON.stringify(statics));
-
     const launcherFiles = {
       "now__bridge.js": new FileFsRef({
         fsPath: require("@now/node-bridge")
