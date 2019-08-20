@@ -114,7 +114,7 @@ export async function build({
     const routes: Route[] = [
       {
         src: `/static/(.*)`,
-        headers: { "cache-control": "s-maxage=31536000, immutable" },
+        headers: { "cache-control": "public,max-age=31536000,immutable" },
         dest: `/static/$1`
       },
       { src: "/favicon.ico", dest: "/favicon.ico" },
