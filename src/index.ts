@@ -111,17 +111,19 @@ export async function build({
 
     const minNodeRange: string | undefined = undefined;
 
+    const prefix = mountpoint === "." ? "" : `/${mountpoint}`;
+
     const routes: Route[] = [
       {
-        src: `/static/(.*)`,
+        src: `${prefix}/static/(.*)`,
         headers: { "cache-control": "public,max-age=31536000,immutable" },
         dest: `/static/$1`
       },
-      { src: "/favicon.ico", dest: "/favicon.ico" },
+      { src: `${prefix}/favicon.ico`, dest: "favicon.ico" },
       {
-        src: "/(.*)",
+        src: `${prefix}($|/.*)`,
         headers: { "cache-control": "s-maxage=1,stale-while-revalidate" },
-        dest: "/server.js"
+        dest: `/server.js`
       }
     ];
 
@@ -146,9 +148,9 @@ export async function build({
     }
 
     validateDistDir(distPath, meta.isDev, config);
-    const statics = await glob("static/**", distPath, mountpoint);
-    const server = await glob("server.js", distPath, mountpoint);
-    const favicon = await glob("favicon.ico", workPath, mountpoint);
+    const statics = await glob("static/**", distPath);
+    const server = await glob("server.js", distPath);
+    const favicon = await glob("favicon.ico", workPath);
 
     const launcherFiles = {
       "now__bridge.js": new FileFsRef({
