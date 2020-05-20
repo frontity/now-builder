@@ -119,6 +119,7 @@ export async function build({
         headers: { "cache-control": "public,max-age=31536000,immutable" },
         dest: `/static/$1`
       },
+      { src: `${prefix}/robots.txt`, dest: "robots.txt" },
       { src: `${prefix}/favicon.ico`, dest: "favicon.ico" },
       {
         src: `${prefix}($|/.*)`,
@@ -150,6 +151,7 @@ export async function build({
     validateDistDir(distPath, meta.isDev, config);
     const statics = await glob("static/**", distPath);
     const server = await glob("server.js", distPath);
+    const robotsTxt = await glob('robots.txt', workPath);
     const favicon = await glob("favicon.ico", workPath);
 
     const launcherFiles = {
@@ -174,6 +176,7 @@ export async function build({
 
     const output = {
       ...statics,
+      ...robotsTxt,
       ...favicon,
       "server.js": lambda
     };
