@@ -12,7 +12,7 @@ import {
   BuildOptions,
   Config,
   FileFsRef,
-  Lambda
+  Lambda,
 } from "@now/build-utils";
 
 interface PackageJson {
@@ -89,7 +89,7 @@ export async function build({
   entrypoint,
   workPath,
   config,
-  meta = {}
+  meta = {},
 }: BuildOptions): Promise<{ routes: object; output: Output }> {
   console.log("Downloading user files...");
   await download(files, workPath, meta);
@@ -117,14 +117,14 @@ export async function build({
       {
         src: `${prefix}/static/(.*)`,
         headers: { "cache-control": "public,max-age=31536000,immutable" },
-        dest: `/static/$1`
+        dest: `/static/$1`,
       },
       { src: `${prefix}/favicon.ico`, dest: "favicon.ico" },
       {
         src: `${prefix}($|/.*)`,
         headers: { "cache-control": "s-maxage=1,stale-while-revalidate" },
-        dest: `/server.js`
-      }
+        dest: `/server.js`,
+      },
     ];
 
     const nodeVersion = await getNodeVersion(entrypointDir, minNodeRange);
@@ -150,15 +150,24 @@ export async function build({
     validateDistDir(distPath, meta.isDev, config);
     const statics = await glob("static/**", distPath);
     const server = await glob("server.js", distPath);
+    const robotsTxt = await glob("robots.txt", workPath);
     const favicon = await glob("favicon.ico", workPath);
+
+    if (!server["server.js"])
+      throw new Error(
+        "Something went wrong with the build. Please run `npx frontity dev --production` locally to find out."
+      );
+
+    if (robotsTxt["robots.txt"])
+      routes.unshift({ src: `${prefix}/robots.txt`, dest: "robots.txt" });
 
     const launcherFiles = {
       "now__bridge.js": new FileFsRef({
-        fsPath: require("@now/node-bridge")
+        fsPath: require("@now/node-bridge"),
       }),
       "now__launcher.js": new FileFsRef({
-        fsPath: path.join(__dirname, "launcher.js")
-      })
+        fsPath: path.join(__dirname, "launcher.js"),
+      }),
     };
 
     const lambda = await createLambda({
@@ -167,15 +176,16 @@ export async function build({
       files: {
         ...launcherFiles,
         "index.js": new FileFsRef({
-          fsPath: server["server.js"].fsPath
-        })
-      }
+          fsPath: server["server.js"].fsPath,
+        }),
+      },
     });
 
     const output = {
       ...statics,
+      ...robotsTxt,
       ...favicon,
-      "server.js": lambda
+      "server.js": lambda,
     };
 
     console.log("Finished.");
