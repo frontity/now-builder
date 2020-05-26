@@ -154,7 +154,7 @@ export async function build({
     const favicon = await glob("favicon.ico", workPath);
 
     if (robotsTxt)
-      routes.push({ src: `${prefix}/robots.txt`, dest: "robots.txt" });
+      routes.unshift({ src: `${prefix}/robots.txt`, dest: "robots.txt" });
 
     const launcherFiles = {
       "now__bridge.js": new FileFsRef({
