@@ -153,7 +153,9 @@ export async function build({
     const robotsTxt = await glob("robots.txt", workPath);
     const favicon = await glob("favicon.ico", workPath);
 
-    if (robotsTxt)
+    console.log(JSON.stringify(robotsTxt));
+
+    if (robotsTxt["robots.txt"])
       routes.unshift({ src: `${prefix}/robots.txt`, dest: "robots.txt" });
 
     const launcherFiles = {
