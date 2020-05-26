@@ -1,6 +1,6 @@
 {
   "name": "@frontity/now",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A Frontity builder for the Now hosting (Zeit)",
   "repository": {
     "type": "git",
@@ -18,9 +18,7 @@
     "url": "https://github.com/frontity/now-builder/issues"
   },
   "homepage": "https://github.com/frontity/now-builder#readme",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
