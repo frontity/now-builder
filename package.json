@@ -34,6 +34,7 @@
     "@now/node-bridge": "^1.2.3"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.2.6",
     "@changesets/cli": "^2.7.2",
     "@now/build-utils": "^0.9.4",
     "@types/glob": "^7.1.1",
