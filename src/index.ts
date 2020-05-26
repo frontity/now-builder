@@ -153,7 +153,10 @@ export async function build({
     const robotsTxt = await glob("robots.txt", workPath);
     const favicon = await glob("favicon.ico", workPath);
 
-    console.log(JSON.stringify(robotsTxt));
+    if (!server["server.js"])
+      throw new Error(
+        "Something went wrong with the build. Please run `npx frontity dev --production` locally to find out."
+      );
 
     if (robotsTxt["robots.txt"])
       routes.unshift({ src: `${prefix}/robots.txt`, dest: "robots.txt" });
