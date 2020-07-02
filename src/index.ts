@@ -151,6 +151,7 @@ export async function build({
     const statics = await glob("static/**", distPath);
     const server = await glob("server.js", distPath);
     const robotsTxt = await glob("robots.txt", workPath);
+    const adsTxt = await glob("ads.txt", workPath);
     const favicon = await glob("favicon.ico", workPath);
 
     if (!server["server.js"])
@@ -160,6 +161,9 @@ export async function build({
 
     if (robotsTxt["robots.txt"])
       routes.unshift({ src: `${prefix}/robots.txt`, dest: "robots.txt" });
+
+    if (adsTxt["ads.txt"])
+      routes.unshift({ src: `${prefix}/ads.txt`, dest: "ads.txt" });
 
     const launcherFiles = {
       "now__bridge.js": new FileFsRef({
@@ -185,6 +189,7 @@ export async function build({
       ...statics,
       ...robotsTxt,
       ...favicon,
+      ...adsTxt,
       "server.js": lambda,
     };
 
