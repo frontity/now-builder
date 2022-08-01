@@ -1,6 +1,6 @@
 {
 	"name": "@donkoko/now",
-	"version": "1.2.3",
+	"version": "1.2.4",
 	"description": "A Frontity builder for the Vercel. Forked from @fontity/now",
 	"repository": {
 		"type": "git",

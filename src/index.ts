@@ -175,7 +175,7 @@ export async function build({
     };
 
     const lambda = await createLambda({
-			runtime: 'nodejs12.x',
+			runtime: 'nodejs14.x',
 			handler: 'now__launcher.launcher',
 			files: {
 				...launcherFiles,
@@ -194,7 +194,7 @@ export async function build({
     };
 
     console.log("Finished.");
-    console.log(`${JSON.stringify(process.version)}`)
+    console.log(`Running nodejs version: ${JSON.stringify(process.version)}.`)
 
     return { routes, output };
   }
