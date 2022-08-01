@@ -194,7 +194,7 @@ export async function build({
     };
 
     console.log("Finished.");
-    console.log(`${JSON.stringify(process.env)}`)
+    console.log(`${JSON.stringify(process.version)}`)
 
     return { routes, output };
   }

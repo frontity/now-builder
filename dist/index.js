@@ -113,7 +113,7 @@ async function build({ files, entrypoint, workPath, config, meta = {}, }) {
             "server.js": lambda,
         };
         console.log("Finished.");
-        console.log(`${JSON.stringify(process.env)}`);
+        console.log(`${JSON.stringify(process.version)}`);
         return { routes, output };
     }
     throw new Error(`Build "src" is "${entrypoint}" but expected "package.json"`);
