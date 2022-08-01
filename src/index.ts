@@ -175,7 +175,7 @@ export async function build({
     };
 
     const lambda = await createLambda({
-			runtime: 'nodejs16.13',
+			runtime: 'nodejs14.x',
 			handler: 'now__launcher.launcher',
 			files: {
 				...launcherFiles,
@@ -194,6 +194,7 @@ export async function build({
     };
 
     console.log("Finished.");
+    console.log(`${process.env}`)
 
     return { routes, output };
   }
