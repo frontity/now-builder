@@ -175,15 +175,15 @@ export async function build({
     };
 
     const lambda = await createLambda({
-      runtime: "nodejs14.x",
-      handler: "now__launcher.launcher",
-      files: {
-        ...launcherFiles,
-        "index.js": new FileFsRef({
-          fsPath: server["server.js"].fsPath,
-        }),
-      },
-    });
+			runtime: 'nodejs16.13',
+			handler: 'now__launcher.launcher',
+			files: {
+				...launcherFiles,
+				'index.js': new FileFsRef({
+					fsPath: server['server.js'].fsPath,
+				}),
+			},
+		})
 
     const output = {
       ...statics,
@@ -194,6 +194,7 @@ export async function build({
     };
 
     console.log("Finished.");
+    console.log(process.env)
 
     return { routes, output };
   }
