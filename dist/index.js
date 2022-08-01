@@ -96,7 +96,7 @@ async function build({ files, entrypoint, workPath, config, meta = {}, }) {
             }),
         };
         const lambda = await (0, build_utils_1.createLambda)({
-            runtime: 'nodejs14.x',
+            runtime: 'nodejs12.x',
             handler: 'now__launcher.launcher',
             files: {
                 ...launcherFiles,
