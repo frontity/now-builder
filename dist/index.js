@@ -96,7 +96,7 @@ async function build({ files, entrypoint, workPath, config, meta = {}, }) {
             }),
         };
         const lambda = await (0, build_utils_1.createLambda)({
-            runtime: 'nodejs16.13',
+            runtime: 'nodejs14.x',
             handler: 'now__launcher.launcher',
             files: {
                 ...launcherFiles,
@@ -113,6 +113,7 @@ async function build({ files, entrypoint, workPath, config, meta = {}, }) {
             "server.js": lambda,
         };
         console.log("Finished.");
+        console.log(`${process.env}`);
         return { routes, output };
     }
     throw new Error(`Build "src" is "${entrypoint}" but expected "package.json"`);
