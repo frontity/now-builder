@@ -194,7 +194,6 @@ export async function build({
     };
 
     console.log("Finished.");
-    console.log(process.env)
 
     return { routes, output };
   }
