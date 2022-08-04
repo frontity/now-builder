@@ -1,5 +1,9 @@
 # @frontity/now
 
+## 1.2.2
+
+- Update lambdas to Node 16.
+
 ## 1.2.1
 
 - Update Now package.
